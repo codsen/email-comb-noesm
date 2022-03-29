@@ -59,7 +59,6 @@ export default (commandLineArgs) => {
           extensions,
           include: resolve("src", "**", "*.ts"),
           exclude: "node_modules/**",
-          rootMode: "upward",
           babelHelpers: "bundled",
         }),
         !commandLineArgs.dev &&
@@ -76,43 +75,6 @@ export default (commandLineArgs) => {
             warnings: false,
           },
         }),
-        banner(licensePiece),
-      ],
-    },
-
-    // UMD development
-    {
-      input: "src/main.ts",
-      output: {
-        file: `dist/${pkg.name}.dev.umd.js`,
-        format: "umd",
-        name: "emailComb",
-        indent: false,
-      },
-      plugins: [
-        builtins(),
-        nodeResolve({
-          extensions,
-        }),
-        json(),
-        typescript({
-          tsconfig: "./tsconfig.build.json",
-          declaration: false,
-        }),
-        commonjs(),
-        babel({
-          extensions,
-          include: resolve("src", "**", "*.ts"),
-          exclude: "node_modules/**",
-          rootMode: "upward",
-          babelHelpers: "bundled",
-        }),
-        !commandLineArgs.dev &&
-          strip({
-            sourceMap: false,
-            include: ["src/**/*.(js|ts)"],
-            functions: ["console.*"],
-          }),
         banner(licensePiece),
       ],
     },
@@ -139,7 +101,6 @@ export default (commandLineArgs) => {
         }),
         babel({
           extensions,
-          rootMode: "upward",
           plugins: [
             [
               "@babel/plugin-transform-runtime",

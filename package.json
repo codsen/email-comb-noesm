@@ -32,34 +32,25 @@
   "types": "types/index.d.ts",
   "scripts": {
     "build": "rollup -c",
-    "ci_test": "npm run build && npm run format && tap --no-only --reporter=silent --output-file=testStats.md && npm run clean_cov",
+    "ci_test": "npm run build && npm run format && npm run unittest",
     "dev": "rollup -c --dev",
-    "devunittest": "npm run dev && tap --only -R 'base'",
+    "devunittest": "npm run dev && c8 yarn run unit",
     "format": "npm run lect && npm run prettier && npm run lint",
     "lect": "echo 'no lect'",
-    "lint": "../../node_modules/eslint/bin/eslint.js . --ext .js --ext .ts --fix --config \"../../.eslintrc.json\" --quiet",
-    "perf": "node perf/check",
-    "prettier": "../../node_modules/prettier/bin-prettier.js '*.{js,css,scss,vue,md,ts}' --write --loglevel silent",
+    "lint": "eslint . --ext .js --ext .ts --fix --config \".eslintrc.json\" --quiet",
+    "prettier": "prettier '*.{js,css,scss,vue,md,ts}' --write --loglevel silent",
     "republish": "npm publish || :",
-    "tap": "tap",
     "tsc": "tsc",
     "pretest": "npm run build",
-    "test": "npm run lint && npm run unittest && npm run test:examples && npm run clean_cov && npm run format",
-    "test:examples": "../../scripts/test-examples.js && npm run lect && npm run prettier",
-    "unittest": "./node_modules/.bin/tap --no-only --output-file=testStats.md --reporter=terse && tsc -p tsconfig.json --noEmit && npm run clean_cov && npm run perf",
-    "clean_cov": "../../scripts/leaveCoverageTotalOnly.js",
-    "clean_types": "../../scripts/cleanTypes.js"
+    "test": "npm run lint && npm run unittest && npm run format",
+    "unittest": "uvu test"
   },
-  "tap": {
-    "coverage-report": [
-      "json-summary",
-      "text"
+  "c8": {
+    "check-coverage": true,
+    "exclude": [
+      "test/**/*.*"
     ],
-    "nyc-arg": [
-      "--exclude=**/*.cjs.js",
-      "--exclude=**/*.umd.js"
-    ],
-    "timeout": 0
+    "lines": 100
   },
   "dependencies": {
     "@babel/runtime": "^7.14.0",
@@ -91,6 +82,8 @@
     "@babel/preset-env": "^7.14.2",
     "@babel/preset-typescript": "^7.13.0",
     "@babel/register": "^7.13.16",
+    "eslint-plugin-row-num": "^1.5.12",
+    "eslint-plugin-test-num": "^1.5.16",
     "@rollup/plugin-babel": "^5.3.0",
     "@rollup/plugin-commonjs": "^19.0.0",
     "@rollup/plugin-json": "^4.1.0",
@@ -101,12 +94,14 @@
     "@types/lodash.pullall": "^4.2.6",
     "@types/lodash.uniq": "^4.5.6",
     "@types/node": "^15.6.0",
-    "@types/tap": "^15.0.1",
     "@typescript-eslint/eslint-plugin": "^4.24.0",
     "@typescript-eslint/parser": "^4.24.0",
     "core-js": "^3.12.1",
     "cross-env": "^7.0.3",
     "eslint": "^7.27.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.6.1",
     "rollup": "^2.49.0",
     "rollup-plugin-ascii": "^0.0.3",
     "rollup-plugin-banner": "^0.2.1",
@@ -114,8 +109,8 @@
     "rollup-plugin-dts": "^3.0.1",
     "rollup-plugin-node-builtins": "^2.1.2",
     "rollup-plugin-terser": "^7.0.2",
-    "tap": "^14.11.0",
     "tslib": "^2.2.0",
-    "typescript": "^4.2.4"
+    "typescript": "^4.2.4",
+    "uvu": "^0.5.3"
   }
 }

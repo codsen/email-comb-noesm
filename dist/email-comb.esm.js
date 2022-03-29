@@ -1,7 +1,7 @@
 /**
  * @name email-comb
  * @fileoverview Remove unused CSS from email templates
- * @version 5.0.16
+ * @version 5.1.0
  * @author Roy Revelt, Codsen Ltd
  * @license MIT
  * {@link https://codsen.com/os/email-comb/}
@@ -22,7 +22,7 @@ import { Ranges } from 'ranges-push';
 import uniq from 'lodash.uniq';
 import matcher from 'matcher';
 
-var version$1 = "5.0.16";
+var version$1 = "5.1.0";
 
 const regexEmptyStyleTag = /[\n]?\s*<style[^>]*>\s*<\/style\s*>/g;
 const regexEmptyMediaQuery = /[\n]?\s*@(media|supports|document)[^{]*{\s*}/g;
@@ -98,7 +98,7 @@ function comb(str, originalOpts) {
   let lastKeptChunksCommaAt = null;
   let onlyDeletedChunksFollow = false;
   let bodyClassOrIdCanBeDeleted;
-  let round1RangesClone;
+  let round1RangesClone = null;
   let nonIndentationsWhitespaceLength = 0;
   let commentsLength = 0;
   const badChars = `.# ~\\!@$%^&*()+=,/';:"?><[]{}|\`\t\n`;
@@ -149,6 +149,19 @@ function comb(str, originalOpts) {
   if (Array.isArray(opts.backend) && opts.backend.length) {
     allHeads = opts.backend.map(headsAndTailsObj => headsAndTailsObj.heads);
     allTails = opts.backend.map(headsAndTailsObj => headsAndTailsObj.tails);
+  }
+  const strArrToMatchAgainstChunks = opts.whitelist.filter(c => !c.startsWith("#") && !c.startsWith("."));
+  let trailingNewline = "";
+  if (str.endsWith("\r\n")) {
+    trailingNewline = "\r\n";
+  } else if (str.endsWith("\n")) {
+    trailingNewline = "\n";
+  } else if (str.endsWith("\r")) {
+    trailingNewline = "\r";
+  }
+  str = str.trim().replace(/\r?\n\s+\r?\n/g, "");
+  if (trailingNewline) {
+    str += trailingNewline;
   }
   const len = str.length;
   const leavePercForLastStage = 0.06;
@@ -226,12 +239,12 @@ function comb(str, originalOpts) {
       if (str[i] === "\n") {
         if (str[i - 1] === "\r") ;
       } else if (str[i] === "\r" && str[i + 1] !== "\n") ;
-      if (stateWithinStyleTag !== true && (
+      if (!stateWithinStyleTag && (
       styleEndedAt === null && styleStartedAt !== null && i >= styleStartedAt ||
       styleStartedAt !== null && styleEndedAt !== null && styleStartedAt > styleEndedAt && styleStartedAt < i)) {
         stateWithinStyleTag = true;
         stateWithinBody = false;
-      } else if (stateWithinBody !== true && bodyStartedAt !== null && (styleStartedAt === null || styleStartedAt < i) && (styleEndedAt === null || styleEndedAt < i)) {
+      } else if (!stateWithinBody && bodyStartedAt !== null && (styleStartedAt === null || styleStartedAt < i) && (styleEndedAt === null || styleEndedAt < i)) {
         stateWithinBody = true;
         stateWithinStyleTag = false;
       }
@@ -251,7 +264,7 @@ function comb(str, originalOpts) {
       if (doNothing) {
         if (doNothingUntil === null || typeof doNothingUntil !== "string" || typeof doNothingUntil === "string" && !doNothingUntil) {
           doNothing = false;
-        } else if (matchRightIncl(str, i, doNothingUntil)) {
+        } else if (doNothingUntil && matchRightIncl(str, i, doNothingUntil)) {
           if (commentStartedAt !== null) {
             if (round === 1 && opts.removeCSSComments) {
               const lineBreakPresentOnTheLeft = matchLeft(str, commentStartedAt, ["\r\n", "\n", "\r"]);
@@ -259,7 +272,8 @@ function comb(str, originalOpts) {
               if (typeof lineBreakPresentOnTheLeft === "string" && lineBreakPresentOnTheLeft.length) {
                 startingIndex -= lineBreakPresentOnTheLeft.length;
               }
-              if (str[startingIndex - 1] && characterSuitableForNames(str[startingIndex - 1]) && str[i + doNothingUntil.length] && characterSuitableForNames(str[i + doNothingUntil.length])) {
+              if (str[startingIndex - 1] && characterSuitableForNames(str[startingIndex - 1]) &&
+              str[i + doNothingUntil.length] && characterSuitableForNames(str[i + doNothingUntil.length])) {
                 finalIndexesToDelete.push(startingIndex, i + doNothingUntil.length, ";");
                 commentsLength += i + doNothingUntil.length - startingIndex;
               } else {
@@ -433,29 +447,29 @@ function comb(str, originalOpts) {
           }
         }
         else if (singleSelectorStartedAt !== null && !characterSuitableForNames(chr)) {
-            let singleSelector = str.slice(singleSelectorStartedAt, i);
-            if (singleSelectorType) {
-              singleSelector = `${singleSelectorType}${singleSelector}`;
-              singleSelectorType = undefined;
+          let singleSelector = str.slice(singleSelectorStartedAt, i);
+          if (singleSelectorType) {
+            singleSelector = `${singleSelectorType}${singleSelector}`;
+            singleSelectorType = undefined;
+          }
+          if (round === 2 && !selectorChunkCanBeDeleted && headCssToDelete.includes(singleSelector)) {
+            selectorChunkCanBeDeleted = true;
+            onlyDeletedChunksFollow = true;
+          } else if (round === 2 && !selectorChunkCanBeDeleted) {
+            if (opts.uglify && (!Array.isArray(opts.whitelist) || !opts.whitelist.length || !matcher([singleSelector], opts.whitelist).length)) {
+              currentChunksMinifiedSelectors.push(singleSelectorStartedAt, i, allClassesAndIdsWithinHeadFinalUglified[allClassesAndIdsWithinHeadFinal.indexOf(singleSelector)]);
             }
-            if (round === 2 && !selectorChunkCanBeDeleted && headCssToDelete.includes(singleSelector)) {
-              selectorChunkCanBeDeleted = true;
-              onlyDeletedChunksFollow = true;
-            } else if (round === 2 && !selectorChunkCanBeDeleted) {
-              if (opts.uglify && (!Array.isArray(opts.whitelist) || !opts.whitelist.length || !matcher([singleSelector], opts.whitelist).length)) {
-                currentChunksMinifiedSelectors.push(singleSelectorStartedAt, i, allClassesAndIdsWithinHeadFinalUglified[allClassesAndIdsWithinHeadFinal.indexOf(singleSelector)]);
-              }
-              if (chr === ",") {
-                lastKeptChunksCommaAt = i;
-                onlyDeletedChunksFollow = false;
-              }
-            }
-            if (chr === "." || chr === "#") {
-              singleSelectorStartedAt = i;
-            } else {
-              singleSelectorStartedAt = null;
+            if (chr === ",") {
+              lastKeptChunksCommaAt = i;
+              onlyDeletedChunksFollow = false;
             }
           }
+          if (chr === "." || chr === "#") {
+            singleSelectorStartedAt = i;
+          } else {
+            singleSelectorStartedAt = null;
+          }
+        }
         if (selectorChunkStartedAt === null) {
           if (chr.trim() && chr !== "}" && chr !== ";" && !(str[i] === "/" && str[i + 1] === "*")) {
             selectorChunkCanBeDeleted = false;
@@ -463,95 +477,98 @@ function comb(str, originalOpts) {
           }
         }
         else if (",{".includes(chr)) {
-            const sliceTo = whitespaceStartedAt || i;
-            currentChunk = str.slice(selectorChunkStartedAt, sliceTo);
-            if (round === 1) {
-              if (whitespaceStartedAt) {
-                if (chr === "," && whitespaceStartedAt < i) {
-                  finalIndexesToDelete.push(whitespaceStartedAt, i);
-                  nonIndentationsWhitespaceLength += i - whitespaceStartedAt;
-                } else if (chr === "{" && whitespaceStartedAt < i - 1) {
-                  finalIndexesToDelete.push(whitespaceStartedAt, i - 1);
-                  nonIndentationsWhitespaceLength += i - 1 - whitespaceStartedAt;
-                }
+          const sliceTo = whitespaceStartedAt || i;
+          currentChunk = str.slice(selectorChunkStartedAt, sliceTo);
+          if (round === 2 && selectorChunkCanBeDeleted && strArrToMatchAgainstChunks.length && matcher([currentChunk], strArrToMatchAgainstChunks).length) {
+            selectorChunkCanBeDeleted = false;
+          }
+          if (round === 1) {
+            if (whitespaceStartedAt) {
+              if (chr === "," && whitespaceStartedAt < i) {
+                finalIndexesToDelete.push(whitespaceStartedAt, i);
+                nonIndentationsWhitespaceLength += i - whitespaceStartedAt;
+              } else if (chr === "{" && whitespaceStartedAt < i - 1) {
+                finalIndexesToDelete.push(whitespaceStartedAt, i - 1);
+                nonIndentationsWhitespaceLength += i - 1 - whitespaceStartedAt;
               }
-              headSelectorsArr.push(currentChunk);
             }
-            else if (selectorChunkCanBeDeleted) {
-                let fromIndex = selectorChunkStartedAt;
-                let toIndex = i;
-                let tempFindingIndex = 0;
-                if (chr === "{" && str[fromIndex - 1] !== ">" && str[fromIndex - 1] !== "}") {
-                  for (let y = selectorChunkStartedAt; y--;) {
-                    totalCounter += 1;
-                    if (str[y].trim() && str[y] !== ",") {
-                      fromIndex = y + 1;
-                      break;
-                    }
-                  }
-                  if (!str[i - 1].trim()) {
-                    toIndex = i - 1;
-                  }
-                } else if (chr === "," && !str[i + 1].trim()) {
-                  for (let y = i + 1; y < len; y++) {
-                    totalCounter += 1;
-                    if (str[y].trim()) {
-                      toIndex = y;
-                      break;
-                    }
-                  }
-                } else if (matchLeft(str, fromIndex, "{", {
-                  trimBeforeMatching: true,
-                  cb: (_char, _theRemainderOfTheString, index) => {
-                    tempFindingIndex = index;
-                    return true;
-                  }
-                })) {
-                  fromIndex = tempFindingIndex + 2;
-                }
-                const resToPush = expander({
-                  str,
-                  from: fromIndex,
-                  to: toIndex,
-                  ifRightSideIncludesThisThenCropTightly: ".#",
-                  ifRightSideIncludesThisCropItToo: ",",
-                  extendToOneSide: "right"
-                });
-                finalIndexesToDelete.push(...resToPush);
-                if (opts.uglify) {
-                  currentChunksMinifiedSelectors.wipe();
-                }
-              } else {
-                if (headWholeLineCanBeDeleted) {
-                  headWholeLineCanBeDeleted = false;
-                }
-                if (onlyDeletedChunksFollow) {
-                  onlyDeletedChunksFollow = false;
-                }
-                if (opts.uglify) {
-                  finalIndexesToDelete.push(currentChunksMinifiedSelectors.current());
-                  currentChunksMinifiedSelectors.wipe();
+            headSelectorsArr.push(currentChunk);
+          }
+          else if (selectorChunkCanBeDeleted) {
+            let fromIndex = selectorChunkStartedAt;
+            let toIndex = i;
+            let tempFindingIndex = 0;
+            if (chr === "{" && str[fromIndex - 1] !== ">" && str[fromIndex - 1] !== "}") {
+              for (let y = selectorChunkStartedAt; y--;) {
+                totalCounter += 1;
+                if (str[y].trim() && str[y] !== ",") {
+                  fromIndex = y + 1;
+                  break;
                 }
               }
-            if (chr !== "{") {
-              selectorChunkStartedAt = null;
-            } else if (round === 2) {
-              if (!headWholeLineCanBeDeleted && lastKeptChunksCommaAt !== null && onlyDeletedChunksFollow) {
-                let deleteUpTo = lastKeptChunksCommaAt + 1;
-                if ("\n\r".includes(str[lastKeptChunksCommaAt + 1])) {
-                  for (let y = lastKeptChunksCommaAt + 1; y < len; y++) {
-                    if (str[y].trim()) {
-                      deleteUpTo = y;
-                      break;
-                    }
-                  }
-                }
-                finalIndexesToDelete.push(lastKeptChunksCommaAt, deleteUpTo);
-                lastKeptChunksCommaAt = null;
-                onlyDeletedChunksFollow = false;
+              if (!str[i - 1].trim()) {
+                toIndex = i - 1;
               }
+            } else if (chr === "," && !str[i + 1].trim()) {
+              for (let y = i + 1; y < len; y++) {
+                totalCounter += 1;
+                if (str[y].trim()) {
+                  toIndex = y;
+                  break;
+                }
+              }
+            } else if (matchLeft(str, fromIndex, "{", {
+              trimBeforeMatching: true,
+              cb: (_char, _theRemainderOfTheString, index) => {
+                tempFindingIndex = index;
+                return true;
+              }
+            })) {
+              fromIndex = tempFindingIndex + 2;
+            }
+            const resToPush = expander({
+              str,
+              from: fromIndex,
+              to: toIndex,
+              ifRightSideIncludesThisThenCropTightly: ".#",
+              ifRightSideIncludesThisCropItToo: ",",
+              extendToOneSide: "right"
+            });
+            finalIndexesToDelete.push(...resToPush);
+            if (opts.uglify) {
+              currentChunksMinifiedSelectors.wipe();
+            }
+          } else {
+            if (headWholeLineCanBeDeleted) {
+              headWholeLineCanBeDeleted = false;
+            }
+            if (onlyDeletedChunksFollow) {
+              onlyDeletedChunksFollow = false;
+            }
+            if (opts.uglify) {
+              finalIndexesToDelete.push(currentChunksMinifiedSelectors.current());
+              currentChunksMinifiedSelectors.wipe();
             }
           }
+          if (chr !== "{") {
+            selectorChunkStartedAt = null;
+          } else if (round === 2) {
+            if (!headWholeLineCanBeDeleted && lastKeptChunksCommaAt !== null && onlyDeletedChunksFollow) {
+              let deleteUpTo = lastKeptChunksCommaAt + 1;
+              if ("\n\r".includes(str[lastKeptChunksCommaAt + 1])) {
+                for (let y = lastKeptChunksCommaAt + 1; y < len; y++) {
+                  if (str[y].trim()) {
+                    deleteUpTo = y;
+                    break;
+                  }
+                }
+              }
+              finalIndexesToDelete.push(lastKeptChunksCommaAt, deleteUpTo);
+              lastKeptChunksCommaAt = null;
+              onlyDeletedChunksFollow = false;
+            }
+          }
+        }
       }
       if (!doNothing && !stateWithinStyleTag && stateWithinBody && str[i] === "/" && matchRight(str, i, "body", {
         trimBeforeMatching: true,
@@ -590,8 +607,8 @@ function comb(str, originalOpts) {
       }
       if (!doNothing && stateWithinBody && !stateWithinStyleTag && str[i] === "s" && str[i + 1] === "t" && str[i + 2] === "y" && str[i + 3] === "l" && str[i + 4] === "e" && str[i + 5] === "=" && badChars.includes(str[i - 1])
       ) {
-          if (`"'`.includes(str[i + 6])) ;
-        }
+        if (`"'`.includes(str[i + 6])) ;
+      }
       if (!doNothing && stateWithinBody && !stateWithinStyleTag && !currentlyWithinQuotes && str[i] === "c" && str[i + 1] === "l" && str[i + 2] === "a" && str[i + 3] === "s" && str[i + 4] === "s" &&
       str[i - 1] &&
       !str[i - 1].trim()) {
@@ -737,7 +754,7 @@ function comb(str, originalOpts) {
           }
           const matchedHeads = matchRightIncl(str, i, allHeads);
           const findings = opts.backend.find(headsTailsObj => headsTailsObj.heads === matchedHeads);
-          if (findings && findings.tails) {
+          if (findings?.tails) {
             doNothingUntil = findings.tails;
           }
         } else if (characterSuitableForNames(chr)) {
@@ -760,7 +777,7 @@ function comb(str, originalOpts) {
           bodyClass = resetBodyClassOrId();
           const matchedHeads = matchRightIncl(str, i, allHeads);
           const findings = opts.backend.find(headsTailsObj => headsTailsObj.heads === matchedHeads);
-          if (findings && findings.tails) {
+          if (findings?.tails) {
             doNothingUntil = findings.tails;
           }
         } else {
@@ -769,25 +786,25 @@ function comb(str, originalOpts) {
             bodyClassesArr.push(`.${carvedClass}`);
           }
           else if (bodyClass.valueStart != null && bodyClassesToDelete.includes(carvedClass)) {
-              const expandedRange = expander({
-                str,
-                from: bodyClass.valueStart,
-                to: i,
-                ifLeftSideIncludesThisThenCropTightly: `"'`,
-                ifRightSideIncludesThisThenCropTightly: `"'`,
-                wipeAllWhitespaceOnLeft: true
-              });
-              let whatToInsert = "";
-              if (str[expandedRange[0] - 1] && str[expandedRange[0] - 1].trim() && str[expandedRange[1]] && str[expandedRange[1]].trim() && (allHeads || allTails) && (allHeads && matchLeft(str, expandedRange[0], allTails) || allTails && matchRightIncl(str, expandedRange[1], allHeads))) {
-                whatToInsert = " ";
-              }
-              finalIndexesToDelete.push(...expandedRange, whatToInsert);
-            } else {
-              bodyClassOrIdCanBeDeleted = false;
-              if (opts.uglify && !(Array.isArray(opts.whitelist) && opts.whitelist.length && matcher([`.${carvedClass}`], opts.whitelist).length)) {
-                finalIndexesToDelete.push(bodyClass.valueStart, i, allClassesAndIdsWithinHeadFinalUglified[allClassesAndIdsWithinHeadFinal.indexOf(`.${carvedClass}`)].slice(1));
-              }
+            const expandedRange = expander({
+              str,
+              from: bodyClass.valueStart,
+              to: i,
+              ifLeftSideIncludesThisThenCropTightly: `"'`,
+              ifRightSideIncludesThisThenCropTightly: `"'`,
+              wipeAllWhitespaceOnLeft: true
+            });
+            let whatToInsert = "";
+            if (str[expandedRange[0] - 1] && str[expandedRange[0] - 1].trim() && str[expandedRange[1]] && str[expandedRange[1]].trim() && (allHeads || allTails) && (allHeads && matchLeft(str, expandedRange[0], allTails) || allTails && matchRightIncl(str, expandedRange[1], allHeads))) {
+              whatToInsert = " ";
             }
+            finalIndexesToDelete.push(...expandedRange, whatToInsert);
+          } else {
+            bodyClassOrIdCanBeDeleted = false;
+            if (opts.uglify && !(Array.isArray(opts.whitelist) && opts.whitelist.length && matcher([`.${carvedClass}`], opts.whitelist).length)) {
+              finalIndexesToDelete.push(bodyClass.valueStart, i, allClassesAndIdsWithinHeadFinalUglified[allClassesAndIdsWithinHeadFinal.indexOf(`.${carvedClass}`)].slice(1));
+            }
+          }
           bodyClass.valueStart = null;
         }
       }
@@ -797,23 +814,23 @@ function comb(str, originalOpts) {
           bodyIdsArr.push(`#${carvedId}`);
         }
         else if (bodyId.valueStart != null && bodyIdsToDelete.includes(carvedId)) {
-            const expandedRange = expander({
-              str,
-              from: bodyId.valueStart,
-              to: i,
-              ifRightSideIncludesThisThenCropTightly: `"'`,
-              wipeAllWhitespaceOnLeft: true
-            });
-            if (str[expandedRange[0] - 1] && str[expandedRange[0] - 1].trim() && str[expandedRange[1]] && str[expandedRange[1]].trim() && (allHeads || allTails) && (allHeads && matchLeft(str, expandedRange[0], allTails || []) || allTails && matchRightIncl(str, expandedRange[1], allHeads || []))) {
-              expandedRange[0] += 1;
-            }
-            finalIndexesToDelete.push(...expandedRange);
-          } else {
-            bodyClassOrIdCanBeDeleted = false;
-            if (opts.uglify && !(Array.isArray(opts.whitelist) && opts.whitelist.length && matcher([`#${carvedId}`], opts.whitelist).length)) {
-              finalIndexesToDelete.push(bodyId.valueStart, i, allClassesAndIdsWithinHeadFinalUglified[allClassesAndIdsWithinHeadFinal.indexOf(`#${carvedId}`)].slice(1));
-            }
+          const expandedRange = expander({
+            str,
+            from: bodyId.valueStart,
+            to: i,
+            ifRightSideIncludesThisThenCropTightly: `"'`,
+            wipeAllWhitespaceOnLeft: true
+          });
+          if (str[expandedRange[0] - 1] && str[expandedRange[0] - 1].trim() && str[expandedRange[1]] && str[expandedRange[1]].trim() && (allHeads || allTails) && (allHeads && matchLeft(str, expandedRange[0], allTails || []) || allTails && matchRightIncl(str, expandedRange[1], allHeads || []))) {
+            expandedRange[0] += 1;
           }
+          finalIndexesToDelete.push(...expandedRange);
+        } else {
+          bodyClassOrIdCanBeDeleted = false;
+          if (opts.uglify && !(Array.isArray(opts.whitelist) && opts.whitelist.length && matcher([`#${carvedId}`], opts.whitelist).length)) {
+            finalIndexesToDelete.push(bodyId.valueStart, i, allClassesAndIdsWithinHeadFinalUglified[allClassesAndIdsWithinHeadFinal.indexOf(`#${carvedId}`)].slice(1));
+          }
+        }
         bodyId.valueStart = null;
       }
       if (!doNothing && bodyClass.valuesStart != null && (!bodyClass.quoteless && (chr === "'" || chr === '"') || bodyClass.quoteless && !characterSuitableForNames(str[i])) && i >= bodyClass.valuesStart) {
@@ -839,8 +856,8 @@ function comb(str, originalOpts) {
             let whatToInsert = "";
             if (str[expandedRange[0] - 1] && str[expandedRange[0] - 1].trim() && str[expandedRange[1]] && str[expandedRange[1]].trim() && !"/>".includes(str[expandedRange[1]])
             ) {
-                whatToInsert = " ";
-              }
+              whatToInsert = " ";
+            }
             finalIndexesToDelete.push(...expandedRange, whatToInsert);
           }
           if (whitespaceStartedAt !== null) {
@@ -872,8 +889,8 @@ function comb(str, originalOpts) {
             let whatToInsert = "";
             if (str[expandedRange[0] - 1] && str[expandedRange[0] - 1].trim() && str[expandedRange[1]] && str[expandedRange[1]].trim() && !"/>".includes(str[expandedRange[1]])
             ) {
-                whatToInsert = " ";
-              }
+              whatToInsert = " ";
+            }
             finalIndexesToDelete.push(...expandedRange, whatToInsert);
           }
           if (whitespaceStartedAt !== null) {
@@ -901,7 +918,7 @@ function comb(str, originalOpts) {
           }
           const matchedHeads = matchRightIncl(str, i, allHeads);
           const findings = opts.backend.find(headsTailsObj => headsTailsObj.heads === matchedHeads);
-          if (findings && findings.tails) {
+          if (findings?.tails) {
             doNothingUntil = findings.tails;
           }
         } else if (characterSuitableForNames(chr)) {
@@ -1060,7 +1077,7 @@ function comb(str, originalOpts) {
       }
       deletedFromHeadArr = uniq(pull(deletedFromHeadArr, opts.whitelist));
       let preppedAllClassesAndIdsWithinHead;
-      if (preppedHeadSelectorsArr && preppedHeadSelectorsArr.length) {
+      if (preppedHeadSelectorsArr?.length) {
         preppedAllClassesAndIdsWithinHead = preppedHeadSelectorsArr.reduce((acc, curr) => acc.concat(extract(curr).res), []);
       } else {
         preppedAllClassesAndIdsWithinHead = [];
@@ -1130,7 +1147,7 @@ function comb(str, originalOpts) {
       opts.reportProgressFunc(currentPercentageDone);
     }
   }
-  let tempLen = str.length;
+  const tempLen = str.length;
   str = str.replace(emptyCondCommentRegex(), "");
   totalCounter += str.length;
   if (tempLen !== str.length) {
@@ -1150,7 +1167,6 @@ function comb(str, originalOpts) {
     removeCSSComments: false,
     lineLengthLimit: 500
   }).result;
-  tempLen = str.length;
   if (tempLen !== str.length) {
     nonIndentationsWhitespaceLength += str.length - tempLen;
   }

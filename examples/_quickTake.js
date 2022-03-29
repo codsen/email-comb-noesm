@@ -1,7 +1,7 @@
 // Quick Take
 
 import { strict as assert } from "assert";
-import { comb, defaults, version } from "../dist/email-comb.esm.js";
+import { comb, defaults, version } from "../dist/email-comb.cjs.js";
 
 // aptly named classes:
 const source = `<head>

@@ -1,10 +1,13 @@
-import tap from "tap";
-import { comb } from "./util/util";
+import { test } from "uvu";
+// eslint-disable-next-line no-unused-vars
+import { equal, is, ok, throws, type, not, match } from "uvu/assert";
+
+import { comb } from "./util/util.mjs";
 
 // basic class/id removal
 // -----------------------------------------------------------------------------
 
-tap.test("01 - mvp", (t) => {
+test("01 - mvp", () => {
   const source = `<head>
 <style type="text/css">
   .unused1[z] {a:1;}
@@ -24,11 +27,10 @@ tap.test("01 - mvp", (t) => {
 </body>
 `;
 
-  t.equal(comb(t, source).result, intended, "01");
-  t.end();
+  equal(comb(source).result, intended, "01");
 });
 
-tap.test("02 - multiple classes and id's", (t) => {
+test("02 - multiple classes and id's", () => {
   const source = `<style>
 <!--[if mso]>
 <![endif]-->
@@ -49,11 +51,10 @@ tap.test("02 - multiple classes and id's", (t) => {
 </body>
 `;
 
-  t.equal(comb(t, source).result, intended, "02");
-  t.end();
+  equal(comb(source).result, intended, "02");
 });
 
-tap.test("03 - mixed classes and non-classes", (t) => {
+test("03 - mixed classes and non-classes", () => {
   const source = `<head>
 <style type="text/css">
   aa, .unused[z], bb {z:2;}
@@ -72,11 +73,10 @@ tap.test("03 - mixed classes and non-classes", (t) => {
 </body>
 `;
 
-  t.equal(comb(t, source).result, intended, "03");
-  t.end();
+  equal(comb(source).result, intended, "03");
 });
 
-tap.test("04 - mixed classes and non-classes", (t) => {
+test("04 - mixed classes and non-classes", () => {
   const source = `<head>
 <style type="text/css">
   aa, .unused[z], bb {z:2;}
@@ -95,11 +95,10 @@ tap.test("04 - mixed classes and non-classes", (t) => {
 </body>
 `;
 
-  t.equal(comb(t, source).result, intended, "04");
-  t.end();
+  equal(comb(source).result, intended, "04");
 });
 
-tap.test("05 - sandwitched used and unused", (t) => {
+test("05 - sandwitched used and unused", () => {
   const source = `<head>
 <style type="text/css">
   .used1 {z:1;}
@@ -119,13 +118,11 @@ tap.test("05 - sandwitched used and unused", (t) => {
 </body>
 `;
 
-  t.equal(comb(t, source).result, intended, "05");
-  t.end();
+  equal(comb(source).result, intended, "05");
 });
 
-tap.test("06 - sandwitched used and unused", (t) => {
+test("06 - sandwitched used and unused", () => {
   const actual = comb(
-    t,
     `<head>
   <style>
     #ab.cd[lang|en]   , .cd   { w:1; }
@@ -145,13 +142,11 @@ tap.test("06 - sandwitched used and unused", (t) => {
 </body>
 `;
 
-  t.equal(actual, intended, "06");
-  t.end();
+  equal(actual, intended, "06");
 });
 
-tap.test("07 - sandwitched used and unused", (t) => {
+test("07 - sandwitched used and unused", () => {
   const actual = comb(
-    t,
     `<head>
   <style>
     #ab.cd[lang|en]   , .cd#ef, .cd, .cd#ef   { w:1; }
@@ -170,13 +165,11 @@ tap.test("07 - sandwitched used and unused", (t) => {
 <body><br class="cd">
 </body>`;
 
-  t.equal(actual, intended, "07");
-  t.end();
+  equal(actual, intended, "07");
 });
 
-tap.test("08 - sandwitched used and unused", (t) => {
+test("08 - sandwitched used and unused", () => {
   const actual = comb(
-    t,
     `<head>
   <style>
     #ab.cd[lang|en]   , .cd#ef { w:1; }
@@ -193,13 +186,11 @@ tap.test("08 - sandwitched used and unused", (t) => {
 </body>
 `;
 
-  t.equal(actual, intended, "08");
-  t.end();
+  equal(actual, intended, "08");
 });
 
-tap.test("09 - mixed classes and non-classes", (t) => {
+test("09 - mixed classes and non-classes", () => {
   const actual = comb(
-    t,
     `<head>
 <style type="text/css">
   @import;
@@ -220,11 +211,10 @@ tap.test("09 - mixed classes and non-classes", (t) => {
 </body>
 `;
 
-  t.equal(actual, intended, "09");
-  t.end();
+  equal(actual, intended, "09");
 });
 
-tap.test("10 - removes classes and id's from HTML5 (normal input)", (t) => {
+test("10 - removes classes and id's from HTML5 (normal input)", () => {
   const source = `
 <!DOCTYPE html>
 <head>
@@ -278,13 +268,11 @@ tap.test("10 - removes classes and id's from HTML5 (normal input)", (t) => {
 </html>
 `;
 
-  t.strictSame(comb(t, source).result, intended, "10");
-  t.end();
+  equal(comb(source).result, intended, "10");
 });
 
-tap.test("11 - removes classes and id's from HTML5 - uglifies", (t) => {
+test("11 - removes classes and id's from HTML5 - uglifies", () => {
   const actual = comb(
-    t,
     `
 <!DOCTYPE html>
 <html lang="en">
@@ -344,13 +332,11 @@ tap.test("11 - removes classes and id's from HTML5 - uglifies", (t) => {
 </html>
 `;
 
-  t.strictSame(actual, intended, "11");
-  t.end();
+  equal(actual, intended, "11");
 });
 
-tap.test("12 - deletes blank class/id attrs", (t) => {
+test("12 - deletes blank class/id attrs", () => {
   const actual = comb(
-    t,
     `
 <!DOCTYPE html>
 <html lang="en">
@@ -409,16 +395,12 @@ tap.test("12 - deletes blank class/id attrs", (t) => {
 </html>
 `;
 
-  t.strictSame(actual, intended, "12");
-  t.end();
+  equal(actual, intended, "12");
 });
 
-tap.test(
-  "13 - class present in both head and body, but head has it joined with nonexistent id",
-  (t) => {
-    const actual = comb(
-      t,
-      `
+test("13 - class present in both head and body, but head has it joined with nonexistent id", () => {
+  const actual = comb(
+    `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -439,9 +421,9 @@ tap.test(
 </body>
 </html>
 `
-    ).result;
+  ).result;
 
-    const intended = `<!DOCTYPE html>
+  const intended = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -458,14 +440,11 @@ tap.test(
 </body>
 </html>
 `;
-    t.strictSame(actual, intended, "13");
-    t.end();
-  }
-);
+  equal(actual, intended, "13");
+});
 
-tap.test("14 - multiple style tags recognised and transformed", (t) => {
+test("14 - multiple style tags recognised and transformed", () => {
   const actual = comb(
-    t,
     `
 <!DOCTYPE html>
 <html lang="en">
@@ -520,13 +499,11 @@ tap.test("14 - multiple style tags recognised and transformed", (t) => {
 </html>
 `;
 
-  t.strictSame(actual, intended, "14");
-  t.end();
+  equal(actual, intended, "14");
 });
 
-tap.test("15 - style tags are outside HEAD", (t) => {
+test("15 - style tags are outside HEAD", () => {
   const actual = comb(
-    t,
     `
 <!DOCTYPE html>
 <style>
@@ -581,13 +558,11 @@ tap.test("15 - style tags are outside HEAD", (t) => {
 </html>
 `;
 
-  t.strictSame(actual, intended, "15");
-  t.end();
+  equal(actual, intended, "15");
 });
 
-tap.test("16 - removes last styles together with the whole style tag", (t) => {
+test("16 - removes last styles together with the whole style tag", () => {
   const actual = comb(
-    t,
     `<!doctype html>
 <html>
 <head>
@@ -617,13 +592,11 @@ color:  black;
 </html>
 `;
 
-  t.strictSame(actual, intended, "16");
-  t.end();
+  equal(actual, intended, "16");
 });
 
-tap.test("17 - deletes multiple empty style tags", (t) => {
+test("17 - deletes multiple empty style tags", () => {
   const actual = comb(
-    t,
     `
 <!DOCTYPE html>
 <html lang="en">
@@ -665,14 +638,11 @@ tap.test("17 - deletes multiple empty style tags", (t) => {
 </body>
 </html>
 `;
-  t.strictSame(actual, intended, "17");
-  t.end();
+  equal(actual, intended, "17");
 });
 
-tap.test(
-  "18 - removes classes wrapped with conditional Outlook comments",
-  (t) => {
-    const source = `
+test("18 - removes classes wrapped with conditional Outlook comments", () => {
+  const source = `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -704,12 +674,12 @@ tap.test(
 </html>
 `;
 
-    const actual = comb(t, source).result;
-    const actualUglified = comb(t, source, {
-      uglify: true,
-    }).result;
+  const actual = comb(source).result;
+  const actualUglified = comb(source, {
+    uglify: true,
+  }).result;
 
-    const intended = `<!DOCTYPE html>
+  const intended = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -737,7 +707,7 @@ tap.test(
 </html>
 `;
 
-    const intendedUglified = `<!DOCTYPE html>
+  const intendedUglified = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -765,16 +735,12 @@ tap.test(
 </html>
 `;
 
-    t.strictSame(actual, intended, "18.01");
-    t.strictSame(actualUglified, intendedUglified, "18.02");
-    t.end();
-  }
-);
+  equal(actual, intended, "18.01");
+  equal(actualUglified, intendedUglified, "18.02");
+});
 
-tap.test(
-  "19 - peculiar pattern - two classes to be removed, then used class",
-  (t) => {
-    const source = `
+test("19 - peculiar pattern - two classes to be removed, then used class", () => {
+  const source = `
 <html>
   <head>
     <style>
@@ -799,7 +765,7 @@ tap.test(
 </html>
 `;
 
-    const intended = `<html>
+  const intended = `<html>
   <head>
     <style>
       @media screen and (max-width:500px){.used-1{width:100%!important}}
@@ -819,12 +785,10 @@ tap.test(
   </body>
 </html>
 `;
-    t.strictSame(comb(t, source).result, intended, "19");
-    t.end();
-  }
-);
+  equal(comb(source).result, intended, "19");
+});
 
-tap.test("20 - head CSS is given minified", (t) => {
+test("20 - head CSS is given minified", () => {
   const source1 = `<head>
   <style>.col-3{z:2%}.col-4{y:3%}</style>
 </head>
@@ -859,12 +823,11 @@ tap.test("20 - head CSS is given minified", (t) => {
 </body>
 </html>
 `;
-  t.strictSame(comb(t, source1).result, intended1, "20.01");
-  t.strictSame(comb(t, source2).result, intended2, "20.02");
-  t.end();
+  equal(comb(source1).result, intended1, "20.01");
+  equal(comb(source2).result, intended2, "20.02");
 });
 
-tap.test("21 - head CSS is given minified, comma separated", (t) => {
+test("21 - head CSS is given minified, comma separated", () => {
   const source1 = `<head>
   <style>.col-12,.col-3,.col-4, .col-6{y:3%}</style>
 </head>
@@ -901,14 +864,20 @@ tap.test("21 - head CSS is given minified, comma separated", (t) => {
 <a class="col-3">
 </html>
 `;
+  const intended3 = `<head>
+  <style>.col-3 {y:3%}</style>
+</head>
+<body>
+<a class="col-3">
+</html>
+`;
 
-  t.strictSame(comb(t, source1).result, intended, "21.01");
-  t.strictSame(comb(t, source2).result, intended, "21.02");
-  t.strictSame(comb(t, source3).result, intended, "21.03");
-  t.end();
+  equal(comb(source1).result, intended, "21.01");
+  equal(comb(source2).result, intended, "21.02");
+  equal(comb(source3).result, intended3, "21.03");
 });
 
-tap.test("22 - head CSS is expanded", (t) => {
+test("22 - head CSS is expanded", () => {
   const source = `<head>
   <style>
     .col-12,
@@ -936,16 +905,14 @@ tap.test("22 - head CSS is expanded", (t) => {
 </html>
 `;
 
-  t.strictSame(comb(t, source).result, intended, "22");
-  t.end();
+  equal(comb(source).result, intended, "22");
 });
 
-tap.test("23 - empty string produces empty string", (t) => {
-  t.strictSame(comb(t, "").result, "", "23");
-  t.end();
+test("23 - empty string produces empty string", () => {
+  equal(comb("").result, "", "23");
 });
 
-tap.test("24 - issue no.2 - mini", (t) => {
+test("24 - issue no.2 - mini", () => {
   const source = `<html>
 <head>
 <!--[if gte mso 9]>
@@ -968,13 +935,11 @@ tap.test("24 - issue no.2 - mini", (t) => {
 </html>
 `;
 
-  t.equal(source, comb(t, source).result, "24");
-  t.end();
+  equal(source, comb(source).result, "24");
 });
 
-tap.test("25 - issue no.2 - full", (t) => {
+test("25 - issue no.2 - full", () => {
   const actual = comb(
-    t,
     `<!DOCTYPE html>
 <html lang="en" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
@@ -1041,14 +1006,11 @@ tap.test("25 - issue no.2 - full", (t) => {
 </html>
 `;
 
-  t.equal(actual, intended, "25");
-  t.end();
+  equal(actual, intended, "25");
 });
 
-tap.test(
-  "26 - separate style tags, wrapped with Outlook comments - used CSS",
-  (t) => {
-    const source = `<html>
+test("26 - separate style tags, wrapped with Outlook comments - used CSS", () => {
+  const source = `<html>
 <head>
 <style>
 #real-id-1:hover{z}
@@ -1076,12 +1038,12 @@ tap.test(
 </html>
 `;
 
-    const actual = comb(t, source).result;
-    const actualUglified = comb(t, source, {
-      uglify: true,
-    }).result;
+  const actual = comb(source).result;
+  const actualUglified = comb(source, {
+    uglify: true,
+  }).result;
 
-    const intended = `<html>
+  const intended = `<html>
 <head>
 <style>
 #real-id-1:hover{z}
@@ -1109,7 +1071,7 @@ tap.test(
 </html>
 `;
 
-    const intendedUglified = `<html>
+  const intendedUglified = `<html>
 <head>
 <style>
 #t:hover{z}
@@ -1137,16 +1099,12 @@ tap.test(
 </html>
 `;
 
-    t.strictSame(actual, intended, "26.01");
-    t.strictSame(actualUglified, intendedUglified, "26.02");
-    t.end();
-  }
-);
+  equal(actual, intended, "26.01");
+  equal(actualUglified, intendedUglified, "26.02");
+});
 
-tap.test(
-  "27 - separate style tags, wrapped with Outlook comments - unused CSS",
-  (t) => {
-    const source = `<html>
+test("27 - separate style tags, wrapped with Outlook comments - unused CSS", () => {
+  const source = `<html>
 <head>
 <style>
 #real-id-1:hover{z}
@@ -1174,12 +1132,12 @@ tap.test(
 </html>
 `;
 
-    const actual = comb(t, source).result;
-    const actualUglified = comb(t, source, {
-      uglify: true,
-    }).result;
+  const actual = comb(source).result;
+  const actualUglified = comb(source, {
+    uglify: true,
+  }).result;
 
-    const intended = `<html>
+  const intended = `<html>
 <head>
 <style>
 #real-id-1:hover{z}
@@ -1203,7 +1161,7 @@ tap.test(
 </html>
 `;
 
-    const intendedUglified = `<html>
+  const intendedUglified = `<html>
 <head>
 <style>
 #t:hover{z}
@@ -1227,16 +1185,12 @@ tap.test(
 </html>
 `;
 
-    t.strictSame(actual, intended, "27.01");
-    t.strictSame(actualUglified, intendedUglified, "27.02");
-    t.end();
-  }
-);
+  equal(actual, intended, "27.01");
+  equal(actualUglified, intendedUglified, "27.02");
+});
 
-tap.test(
-  "28 - separate style tags, wrapped with Outlook comments - part-used CSS",
-  (t) => {
-    const source = `<html>
+test("28 - separate style tags, wrapped with Outlook comments - part-used CSS", () => {
+  const source = `<html>
 <head>
 <style>
 #real-id-1:hover{z}
@@ -1264,19 +1218,19 @@ tap.test(
 </html>
 `;
 
-    const actual = comb(t, source).result;
-    const actualUglified = comb(t, source, {
-      uglify: true,
-    }).result;
-    const actualAllCommentsDeleted = comb(t, source, {
-      doNotRemoveHTMLCommentsWhoseOpeningTagContains: [],
-    }).result;
-    const actualAllCommentsDeletedUglified = comb(t, source, {
-      doNotRemoveHTMLCommentsWhoseOpeningTagContains: [],
-      uglify: true,
-    }).result;
+  const actual = comb(source).result;
+  const actualUglified = comb(source, {
+    uglify: true,
+  }).result;
+  const actualAllCommentsDeleted = comb(source, {
+    doNotRemoveHTMLCommentsWhoseOpeningTagContains: [],
+  }).result;
+  const actualAllCommentsDeletedUglified = comb(source, {
+    doNotRemoveHTMLCommentsWhoseOpeningTagContains: [],
+    uglify: true,
+  }).result;
 
-    const intended = `<html>
+  const intended = `<html>
 <head>
 <style>
 #real-id-1:hover{z}
@@ -1304,7 +1258,7 @@ tap.test(
 </html>
 `;
 
-    const intendedUglified = `<html>
+  const intendedUglified = `<html>
 <head>
 <style>
 #t:hover{z}
@@ -1332,7 +1286,7 @@ tap.test(
 </html>
 `;
 
-    const intendedAllCommentsDeleted = `<html>
+  const intendedAllCommentsDeleted = `<html>
 <head>
 <style>
 #real-id-1:hover{z}
@@ -1356,7 +1310,7 @@ tap.test(
 </html>
 `;
 
-    const intendedAllCommentsDeletedUglified = `<html>
+  const intendedAllCommentsDeletedUglified = `<html>
 <head>
 <style>
 #t:hover{z}
@@ -1380,39 +1334,36 @@ tap.test(
 </html>
 `;
 
-    t.strictSame(actual, intended, "28.01");
-    t.strictSame(actualUglified, intendedUglified, "28.02");
-    t.strictSame(actualAllCommentsDeleted, intendedAllCommentsDeleted, "28.03");
-    t.strictSame(
-      actualAllCommentsDeletedUglified,
-      intendedAllCommentsDeletedUglified,
-      "28.04"
-    );
+  equal(actual, intended, "28.01");
+  equal(actualUglified, intendedUglified, "28.02");
+  equal(actualAllCommentsDeleted, intendedAllCommentsDeleted, "28.03");
+  equal(
+    actualAllCommentsDeletedUglified,
+    intendedAllCommentsDeletedUglified,
+    "28.04"
+  );
 
-    // comment removal off:
-    const actualUglifiedCommentsOffAndIgnored = comb(t, source, {
-      removeHTMLComments: false,
-      doNotRemoveHTMLCommentsWhoseOpeningTagContains: [],
-    }).result;
-    t.strictSame(actualUglifiedCommentsOffAndIgnored, intended, "28.05");
+  // comment removal off:
+  const actualUglifiedCommentsOffAndIgnored = comb(source, {
+    removeHTMLComments: false,
+    doNotRemoveHTMLCommentsWhoseOpeningTagContains: [],
+  }).result;
+  equal(actualUglifiedCommentsOffAndIgnored, intended, "28.05");
 
-    const actualUglifiedCommentsOff = comb(t, source, {
-      removeHTMLComments: false,
-    }).result;
-    t.strictSame(actualUglifiedCommentsOff, intended, "28.06");
+  const actualUglifiedCommentsOff = comb(source, {
+    removeHTMLComments: false,
+  }).result;
+  equal(actualUglifiedCommentsOff, intended, "28.06");
 
-    const actualUglifiedCommentsOffUglify = comb(t, source, {
-      removeHTMLComments: false,
-      uglify: true,
-    }).result;
-    t.strictSame(actualUglifiedCommentsOffUglify, intendedUglified, "28.07");
-    t.end();
-  }
-);
+  const actualUglifiedCommentsOffUglify = comb(source, {
+    removeHTMLComments: false,
+    uglify: true,
+  }).result;
+  equal(actualUglifiedCommentsOffUglify, intendedUglified, "28.07");
+});
 
-tap.test("29 - plus selector", (t) => {
+test("29 - plus selector", () => {
   const actual1 = comb(
-    t,
     `<style>
 [owa] .klm,
 body[nop] .klm,
@@ -1436,13 +1387,11 @@ u+.a .jb{uvw}
 <u><a class="a"><i>y</i></a></u>
 <u><a class="a"><i class="jb">z</i></a></u>`;
 
-  t.equal(actual1, intended1, "29");
-  t.end();
+  equal(actual1, intended1, "29");
 });
 
-tap.test("30 - double curlies around values", (t) => {
+test("30 - double curlies around values", () => {
   const actual1 = comb(
-    t,
     `<style>
 .used-1 {
 display: {{ abc.de_fg | hi_jk: 10 }};
@@ -1470,6 +1419,7 @@ display: {{ abc.de_fg | hi_jk: 10 }};
 <td>
 text`;
 
-  t.equal(actual1, intended1, "30");
-  t.end();
+  equal(actual1, intended1, "30");
 });
+
+test.run();

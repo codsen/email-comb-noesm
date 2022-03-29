@@ -1,7 +1,7 @@
 /**
  * @name email-comb
  * @fileoverview Remove unused CSS from email templates
- * @version 5.0.16
+ * @version 5.1.0
  * @author Roy Revelt, Codsen Ltd
  * @license MIT
  * {@link https://codsen.com/os/email-comb/}
@@ -11,12 +11,12 @@
 typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
 typeof define === 'function' && define.amd ? define(['exports'], factory) :
 (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.emailComb = {}));
-}(this, (function (exports) { 'use strict';
+})(this, (function (exports) { 'use strict';
 
 /**
  * @name arrayiffy-if-string
  * @fileoverview Put non-empty strings into arrays, turn empty-ones into empty arrays. Bypass everything else.
- * @version 3.13.16
+ * @version 3.14.0
  * @author Roy Revelt, Codsen Ltd
  * @license MIT
  * {@link https://codsen.com/os/arrayiffy-if-string/}
@@ -35,7 +35,7 @@ function arrayiffy(something) {
 /**
  * @name string-match-left-right
  * @fileoverview Match substrings on the left or right of a given index, ignoring whitespace
- * @version 7.0.10
+ * @version 7.1.0
  * @author Roy Revelt, Codsen Ltd
  * @license MIT
  * {@link https://codsen.com/os/string-match-left-right/}
@@ -334,7 +334,7 @@ function matchRight(str, position, whatToMatch, opts) {
 /**
  * @name regex-empty-conditional-comments
  * @fileoverview Regular expression for matching HTML empty conditional comments
- * @version 1.10.16
+ * @version 1.11.0
  * @author Roy Revelt, Codsen Ltd
  * @license MIT
  * {@link https://codsen.com/os/regex-empty-conditional-comments/}
@@ -2119,7 +2119,7 @@ module.exports = cloneDeep;
 /**
  * @name string-left-right
  * @fileoverview Looks up the first non-whitespace character to the left/right of a given index
- * @version 4.0.16
+ * @version 4.1.0
  * @author Roy Revelt, Codsen Ltd
  * @license MIT
  * {@link https://codsen.com/os/string-left-right/}
@@ -2235,7 +2235,7 @@ function left(str, idx = 0) {
 /**
  * @name string-extract-class-names
  * @fileoverview Extracts CSS class/id names from a string
- * @version 6.0.16
+ * @version 6.1.0
  * @author Roy Revelt, Codsen Ltd
  * @license MIT
  * {@link https://codsen.com/os/string-extract-class-names/}
@@ -2423,7 +2423,7 @@ var matcher = matcher$1.exports;
 /**
  * @name array-pull-all-with-glob
  * @fileoverview Like _.pullAll but with globs (wildcards)
- * @version 5.0.16
+ * @version 5.1.0
  * @author Roy Revelt, Codsen Ltd
  * @license MIT
  * {@link https://codsen.com/os/array-pull-all-with-glob/}
@@ -2447,8 +2447,6 @@ function pull(originalInput, originalToBeRemoved, originalOpts) {
   })));
   return res;
 }
-
-var version$1 = "5.0.16";
 
 /**
  * lodash (Custom Build) <https://lodash.com/>
@@ -3519,7 +3517,7 @@ var lodash_intersection = intersection;
 /**
  * @name string-range-expander
  * @fileoverview Expands string index ranges within whitespace boundaries until letters are met
- * @version 2.0.16
+ * @version 2.1.0
  * @author Roy Revelt, Codsen Ltd
  * @license MIT
  * {@link https://codsen.com/os/string-range-expander/}
@@ -3651,7 +3649,7 @@ function expander(originalOpts) {
 /**
  * @name string-uglify
  * @fileoverview Shorten sets of strings deterministically, to be git-friendly
- * @version 1.4.16
+ * @version 1.5.0
  * @author Roy Revelt, Codsen Ltd
  * @license MIT
  * {@link https://codsen.com/os/string-uglify/}
@@ -3828,7 +3826,7 @@ function uglifyArr(arr) {
 /**
  * @name ranges-sort
  * @fileoverview Sort string index ranges
- * @version 4.0.16
+ * @version 4.1.0
  * @author Roy Revelt, Codsen Ltd
  * @license MIT
  * {@link https://codsen.com/os/ranges-sort/}
@@ -3891,7 +3889,7 @@ function rSort(arrOfRanges, originalOptions) {
 /**
  * @name ranges-merge
  * @fileoverview Merge and sort string index ranges
- * @version 7.0.16
+ * @version 7.1.0
  * @author Roy Revelt, Codsen Ltd
  * @license MIT
  * {@link https://codsen.com/os/ranges-merge/}
@@ -3991,7 +3989,7 @@ function rMerge(arrOfRanges, originalOpts) {
 /**
  * @name ranges-apply
  * @fileoverview Take an array of string index ranges, delete/replace the string according to them
- * @version 5.0.16
+ * @version 5.1.0
  * @author Roy Revelt, Codsen Ltd
  * @license MIT
  * {@link https://codsen.com/os/ranges-apply/}
@@ -4300,7 +4298,7 @@ var lodash_pullall = pullAll;
 /**
  * @name string-collapse-leading-whitespace
  * @fileoverview Collapse the leading and trailing whitespace of a string
- * @version 5.0.16
+ * @version 5.1.0
  * @author Roy Revelt, Codsen Ltd
  * @license MIT
  * {@link https://codsen.com/os/string-collapse-leading-whitespace/}
@@ -4377,7 +4375,7 @@ function collWhitespace(str, originallineBreakLimit = 1) {
 /**
  * @name ranges-push
  * @fileoverview Gather string index ranges
- * @version 5.0.16
+ * @version 5.1.0
  * @author Roy Revelt, Codsen Ltd
  * @license MIT
  * {@link https://codsen.com/os/ranges-push/}
@@ -4519,7 +4517,7 @@ class Ranges {
 /**
  * @name html-crush
  * @fileoverview Minifies HTML/CSS: valid or broken, pure or mixed with other languages
- * @version 4.1.10
+ * @version 4.2.0
  * @author Roy Revelt, Codsen Ltd
  * @license MIT
  * {@link https://codsen.com/os/html-crush/}
@@ -5969,6 +5967,8 @@ function noop() {
 
 var lodash_uniq = uniq;
 
+var version$1 = "5.1.0";
+
 /* eslint @typescript-eslint/explicit-module-boundary-types: 0 */
 const regexEmptyStyleTag = /[\n]?\s*<style[^>]*>\s*<\/style\s*>/g;
 const regexEmptyMediaQuery = /[\n]?\s*@(media|supports|document)[^{]*{\s*}/g;
@@ -5988,6 +5988,7 @@ function isLatinLetter(char) {
             (char.charCodeAt(0) > 96 && char.charCodeAt(0) < 123)));
 }
 
+/* eslint-disable no-labels */
 const version = version$1;
 const defaults = {
     whitelist: [],
@@ -6122,7 +6123,7 @@ function comb(str, originalOpts) {
     let bodyClassOrIdCanBeDeleted;
     // copy of the first round's ranges, used to skip the same ranges
     // in round 2:
-    let round1RangesClone;
+    let round1RangesClone = null;
     // counters:
     let nonIndentationsWhitespaceLength = 0;
     let commentsLength = 0;
@@ -6199,6 +6200,32 @@ function comb(str, originalOpts) {
     if (Array.isArray(opts.backend) && opts.backend.length) {
         allHeads = opts.backend.map((headsAndTailsObj) => headsAndTailsObj.heads);
         allTails = opts.backend.map((headsAndTailsObj) => headsAndTailsObj.tails);
+    }
+    // opts.whitelist accepts classes or id's:
+    // [".dont__delete-me", "#keep-me-too"]
+    // but also since v6.1 it also accepts raw strings
+    // which are matched on the whole chunk, for example
+    //
+    // [data-ogsc] .sm-text-red-500{display: none;}
+    // |------------+-------------|
+    //              |
+    //            chunk
+    //
+    const strArrToMatchAgainstChunks = opts.whitelist.filter((c) => !c.startsWith("#") && !c.startsWith("."));
+    let trailingNewline = "";
+    if (str.endsWith("\r\n")) {
+        trailingNewline = "\r\n";
+    }
+    else if (str.endsWith("\n")) {
+        trailingNewline = "\n";
+    }
+    else if (str.endsWith("\r")) {
+        trailingNewline = "\r";
+    }
+    str = str.trim().replace(/\r?\n\s+\r?\n/g, "");
+    // restore trailing newline
+    if (trailingNewline) {
+        str += trailingNewline;
     }
     const len = str.length;
     const leavePercForLastStage = 0.06; // in range of [0, 1]
@@ -6336,7 +6363,7 @@ function comb(str, originalOpts) {
                 if (str[i - 1] === "\r") ;
             }
             else if (str[i] === "\r" && str[i + 1] !== "\n") ;
-            if (stateWithinStyleTag !== true &&
+            if (!stateWithinStyleTag &&
                 // a) either it's the first style tag and currently we haven't traversed
                 // it's closing yet:
                 ((styleEndedAt === null &&
@@ -6352,7 +6379,7 @@ function comb(str, originalOpts) {
                 stateWithinStyleTag = true;
                 stateWithinBody = false;
             }
-            else if (stateWithinBody !== true &&
+            else if (!stateWithinBody &&
                 bodyStartedAt !== null &&
                 (styleStartedAt === null || styleStartedAt < i) &&
                 (styleEndedAt === null || styleEndedAt < i)) {
@@ -6417,7 +6444,7 @@ function comb(str, originalOpts) {
                     doNothing = false;
                     // just turn it off and move on.
                 }
-                else if (matchRightIncl(str, i, doNothingUntil)) {
+                else if (doNothingUntil && matchRightIncl(str, i, doNothingUntil)) {
                     // Normally doNothingUntil is a single character.
                     // However, when matching back-end characters, it can be multiple chars.
                     // That's why above we can't compare with '===' and need the
@@ -6435,6 +6462,7 @@ function comb(str, originalOpts) {
                             }
                             if (str[startingIndex - 1] &&
                                 characterSuitableForNames(str[startingIndex - 1]) &&
+                                // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
                                 str[i + doNothingUntil.length] &&
                                 characterSuitableForNames(str[i + doNothingUntil.length])) {
                                 finalIndexesToDelete.push(startingIndex, i + doNothingUntil.length, ";");
@@ -6801,6 +6829,14 @@ function comb(str, originalOpts) {
                 else if (",{".includes(chr)) {
                     const sliceTo = whitespaceStartedAt || i;
                     currentChunk = str.slice(selectorChunkStartedAt, sliceTo);
+                    // if it's round #2 and chunk is about to be deleted, give it the last
+                    // chance, match it against whitelist strArrToMatchAgainstChunks[]
+                    if (round === 2 &&
+                        selectorChunkCanBeDeleted &&
+                        strArrToMatchAgainstChunks.length &&
+                        matcher([currentChunk], strArrToMatchAgainstChunks).length) {
+                        selectorChunkCanBeDeleted = false;
+                    }
                     if (round === 1) {
                         // delete whitespace in front of commas or more than two spaces
                         // in front of opening curly braces:
@@ -7076,7 +7112,7 @@ function comb(str, originalOpts) {
                             //     ifRightSideIncludesThisThenCropTightly: "/>",
                             //     wipeAllWhitespaceOnLeft: true,
                             //   });
-                            //   console.log(
+                            //    console.log(
                             //     `1856 PUSH ${JSON.stringify(calculatedRange, null, 0)}`
                             //   );
                             //   finalIndexesToDelete.push(...calculatedRange);
@@ -7178,7 +7214,7 @@ function comb(str, originalOpts) {
                             //     ifRightSideIncludesThisThenCropTightly: "/>",
                             //     wipeAllWhitespaceOnLeft: true,
                             //   });
-                            //   console.log(
+                            //    console.log(
                             //     `1987 PUSH ${JSON.stringify(calculatedRange, null, 0)}`
                             //   );
                             //   finalIndexesToDelete.push(...calculatedRange);
@@ -7233,7 +7269,7 @@ function comb(str, originalOpts) {
                     // 3. set doNothingUntil to corresponding tails
                     const matchedHeads = matchRightIncl(str, i, allHeads);
                     const findings = opts.backend.find((headsTailsObj) => headsTailsObj.heads === matchedHeads);
-                    if (findings && findings.tails) {
+                    if (findings?.tails) {
                         doNothingUntil = findings.tails;
                     }
                 }
@@ -7277,18 +7313,18 @@ function comb(str, originalOpts) {
                     bodyClass = resetBodyClassOrId();
                     const matchedHeads = matchRightIncl(str, i, allHeads);
                     const findings = opts.backend.find((headsTailsObj) => headsTailsObj.heads === matchedHeads);
-                    if (findings && findings.tails) {
+                    if (findings?.tails) {
                         doNothingUntil = findings.tails;
                     }
                 }
                 else {
                     // normal operations can continue
                     const carvedClass = `${str.slice(bodyClass.valueStart, i)}`;
-                    // console.log(
+                    //  console.log(
                     //   `2206 R1 = ${!!(allTails && matchRightIncl(str, i, allTails))}`
                     // );
-                    // console.log(`2208 R2 = ${!!matchRightIncl(str, i, allTails)}`);
-                    // console.log(
+                    //  console.log(`2208 R2 = ${!!matchRightIncl(str, i, allTails)}`);
+                    //  console.log(
                     //   `2210 R3 = ${!!(allHeads && matchRightIncl(str, i, allHeads))}`
                     // );
                     if (round === 1) {
@@ -7524,7 +7560,7 @@ function comb(str, originalOpts) {
                     // 3. set doNothingUntil to corresponding tails
                     const matchedHeads = matchRightIncl(str, i, allHeads);
                     const findings = opts.backend.find((headsTailsObj) => headsTailsObj.heads === matchedHeads);
-                    if (findings && findings.tails) {
+                    if (findings?.tails) {
                         doNothingUntil = findings.tails;
                     }
                 }
@@ -7708,7 +7744,7 @@ function comb(str, originalOpts) {
                 if (!str[i].trim()) {
                     if (whitespaceStartedAt === null) {
                         whitespaceStartedAt = i;
-                        // console.log(
+                        //  console.log(
                         //   `2974 SET ${`\u001b[${33}m${`whitespaceStartedAt`}\u001b[${39}m`} = ${whitespaceStartedAt}`
                         // );
                     }
@@ -7733,24 +7769,6 @@ function comb(str, originalOpts) {
                 if (temp && temp[1] - 1 > i) {
                     i = temp[1] - 1;
                 }
-                // if (doNothing) {
-                //   doNothing = false;
-                //   console.log(
-                //     `3015 SET ${`\u001b[${33}m${`doNothing`}\u001b[${39}m`} = false`
-                //   );
-                // }
-                // if (ruleChunkStartedAt !== null) {
-                //   ruleChunkStartedAt = i + 1;
-                //   console.log(
-                //     `3021 SET \u001b[${33}m${`ruleChunkStartedAt`}\u001b[${39}m = ${ruleChunkStartedAt}`
-                //   );
-                // }
-                // if (selectorChunkStartedAt !== null) {
-                //   selectorChunkStartedAt = i + 1;
-                //   console.log(
-                //     `3027 SET \u001b[${33}m${`selectorChunkStartedAt`}\u001b[${39}m = ${selectorChunkStartedAt}`
-                //   );
-                // }
                 continue;
             }
             // catch would-have-been comment endings
@@ -7786,7 +7804,75 @@ function comb(str, originalOpts) {
                     continue;
                 }
             }
-            // console.log(`styleStartedAt = ${styleStartedAt}`);
+            // LOGGING:
+            // ================
+            // NOTE: logging switch below
+            /* if (round === 1) {
+              if (stateWithinBody) {
+                
+                  console.log(
+                    `3493 bodyClass.valueStart=${bodyClass.valueStart}\nbodyId.valueStart=${bodyId.valueStart}\nbodyClass.valuesStart=${bodyClass.valuesStart}${bodyId.valuesStart}`
+                  );
+                // logging:
+                //  console.log(
+                //   `3149 ${`\u001b[${90}m${`bodyClassOrIdCanBeDeleted`}\u001b[${39}m`} = ${JSON.stringify(
+                //     bodyClassOrIdCanBeDeleted,
+                //     null,
+                //     0
+                //   )}`
+                // );
+                //  console.log(
+                //   `3156 ${`\u001b[${90}m${`whitespaceStartedAt`}\u001b[${39}m`} = ${JSON.stringify(
+                //     whitespaceStartedAt,
+                //     null,
+                //     0
+                //   )}`
+                // );
+                
+                  console.log(
+                    `3512 bodyItsTheFirstClassOrId=${bodyItsTheFirstClassOrId}\nheadWholeLineCanBeDeleted=${headWholeLineCanBeDeleted}`
+                  );
+              } else if (stateWithinStyleTag) {
+                // it's still within head:
+      
+                
+                  console.log(
+                    `ENDING: \u001b[${36}m${`headWholeLineCanBeDeleted = ${headWholeLineCanBeDeleted}`}\u001b[${39}m
+      \u001b[${36}m${`headWholeLineCanBeDeleted = ${headWholeLineCanBeDeleted}`}\u001b[${39}m
+      \u001b[${36}m${`insideCurlyBraces = ${insideCurlyBraces}`}\u001b[${39}m
+      \u001b[${36}m${`curliesDepth = ${curliesDepth}`}\u001b[${39}m`
+                  );
+      
+                //
+      
+                // LOGGING for stage 1:
+                if (round === 1) {
+                  
+                    console.log(
+                      `
+      ${`\u001b[${90}m${`ruleChunkStartedAt`}\u001b[${39}m = ${ruleChunkStartedAt}`};
+      ${`\u001b[${90}m${`selectorChunkStartedAt`}\u001b[${39}m = ${selectorChunkStartedAt}`};
+      ${`\u001b[${90}m${`selectorChunkCanBeDeleted`}\u001b[${39}m = ${selectorChunkCanBeDeleted}`};
+      ${`\u001b[${90}m${`currentChunk`}\u001b[${39}m = ${currentChunk}`};
+      ${`\u001b[${90}m${`whitespaceStartedAt`}\u001b[${39}m = ${whitespaceStartedAt}`};
+      ${`\u001b[${90}m${`singleSelectorStartedAt`}\u001b[${39}m = ${singleSelectorStartedAt}`};
+      ${`\u001b[${90}m${`commentStartedAt`}\u001b[${39}m = ${commentStartedAt}`};
+      ${`\u001b[${90}m${`checkingInsideCurlyBraces`}\u001b[${39}m = ${checkingInsideCurlyBraces}`};
+      ${`\u001b[${90}m${`insideCurlyBraces`}\u001b[${39}m = ${insideCurlyBraces}`};`
+                    );
+                }
+              }
+      
+              
+                console.log(
+                  `${`\u001b[${
+                    stateWithinBody ? 32 : 31
+                  }m${`stateWithinBody`}\u001b[${39}m`}; ${`\u001b[${
+                    stateWithinStyleTag ? 32 : 31
+                  }m${`stateWithinStyleTag`}\u001b[${39}m`}; \u001b[${33}m${`lastKeptChunksCommaAt`}\u001b[${39}m = ${lastKeptChunksCommaAt}; \u001b[${33}m${`onlyDeletedChunksFollow`}\u001b[${39}m = ${onlyDeletedChunksFollow};`
+                );
+            } */
+            //  console.log(`styleStartedAt = ${styleStartedAt}`);
         }
         //
         //
@@ -7861,13 +7947,13 @@ function comb(str, originalOpts) {
             }
             deletedFromHeadArr = lodash_uniq(pull(deletedFromHeadArr, opts.whitelist));
             let preppedAllClassesAndIdsWithinHead;
-            if (preppedHeadSelectorsArr && preppedHeadSelectorsArr.length) {
+            if (preppedHeadSelectorsArr?.length) {
                 preppedAllClassesAndIdsWithinHead = preppedHeadSelectorsArr.reduce((acc, curr) => acc.concat(extract(curr).res), []);
             }
             else {
                 preppedAllClassesAndIdsWithinHead = [];
             }
-            // console.log(`\n* preppedAllClassesAndIdsWithinHead = ${JSON.stringify(preppedAllClassesAndIdsWithinHead, null, 4)}`)
+            //  console.log(`\n* preppedAllClassesAndIdsWithinHead = ${JSON.stringify(preppedAllClassesAndIdsWithinHead, null, 4)}`)
             // cycle #2 - now treat remaining lumps as definite sources of
             // "what classes or id's are present in the head"
             // use "preppedAllClassesAndIdsWithinHead" as a head selector reference when comparing
@@ -8009,7 +8095,7 @@ function comb(str, originalOpts) {
         }
     }
     // remove empty Outlook conditional comments:
-    let tempLen = str.length;
+    const tempLen = str.length;
     str = str.replace(emptyCondCommentRegex(), "");
     totalCounter += str.length;
     if (tempLen !== str.length) {
@@ -8032,7 +8118,6 @@ function comb(str, originalOpts) {
         removeCSSComments: false,
         lineLengthLimit: 500,
     }).result;
-    tempLen = str.length;
     if (tempLen !== str.length) {
         nonIndentationsWhitespaceLength += str.length - tempLen;
     }
@@ -8094,4 +8179,4 @@ exports.version = version;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-})));
+}));
