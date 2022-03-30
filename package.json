@@ -17,8 +17,7 @@
   "homepage": "https://codsen.com/os/email-comb/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/codsen/codsen.git",
-    "directory": "packages/email-comb"
+    "url": "https://github.com/codsen/email-comb-cjs.git"
   },
   "license": "MIT",
   "author": {
@@ -32,7 +31,7 @@
   "types": "types/index.d.ts",
   "scripts": {
     "build": "rollup -c",
-    "ci_test": "npm run build && npm run format && npm run unittest",
+    "ci_test": "npm run build && npm run format && npm run unit",
     "dev": "rollup -c --dev",
     "devunittest": "npm run dev && c8 yarn run unit",
     "format": "npm run lect && npm run prettier && npm run lint",
@@ -43,10 +42,10 @@
     "tsc": "tsc",
     "pretest": "npm run build",
     "test": "npm run lint && npm run unittest && npm run format",
-    "unittest": "uvu test"
+    "unit": "c8 uvu test"
   },
   "c8": {
-    "check-coverage": true,
+    "check-coverage": false,
     "exclude": [
       "test/**/*.*"
     ],
@@ -96,6 +95,7 @@
     "@types/node": "^15.6.0",
     "@typescript-eslint/eslint-plugin": "^4.24.0",
     "@typescript-eslint/parser": "^4.24.0",
+    "c8": "^7.11.0",
     "core-js": "^3.12.1",
     "cross-env": "^7.0.3",
     "eslint": "^7.27.0",
