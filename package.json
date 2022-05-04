@@ -1,6 +1,6 @@
 {
   "name": "email-comb",
-  "version": "5.2.0",
+  "version": "5.2.1",
   "description": "Remove unused CSS from email templates",
   "keywords": [
     "body",
