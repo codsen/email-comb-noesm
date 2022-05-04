@@ -26,3 +26,4 @@ rollup.config.js
 testStats.md
 tsconfig.json
 tsconfig.build.json
+.eslintrc.json
