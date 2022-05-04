@@ -16,6 +16,7 @@ coverage
 perf
 src
 test
+examples
 
 # files:
 
@@ -24,3 +25,4 @@ test
 rollup.config.js
 testStats.md
 tsconfig.json
+tsconfig.build.json
