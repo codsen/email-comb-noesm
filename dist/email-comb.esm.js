@@ -28,7 +28,7 @@ const regexEmptyStyleTag = /[\n]?\s*<style[^>]*>\s*<\/style\s*>/g;
 const regexEmptyMediaQuery = /[\n]?\s*@(media|supports|document)[^{]*{\s*}/g;
 const regexEmptyUnclosedMediaQuery = /@media[^{@}]+{(?=\s*<\/style>)/g;
 function isObj(something) {
-  return something && typeof something === "object" && !Array.isArray(something);
+  return !!something && typeof something === "object" && !Array.isArray(something);
 }
 function hasOwnProp(obj, prop) {
   return Object.prototype.hasOwnProperty.call(obj, prop);
