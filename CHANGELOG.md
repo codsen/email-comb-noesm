@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.2.1 (2022-05-04)
+
+### Bug Fixes
+
+- set the correct git repo URL in `package.json`
+- set the correct version strings in `./dist/*` bundles
+
 ## 5.2.0 (2022-05-04)
 
 ### Features
