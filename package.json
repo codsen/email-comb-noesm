@@ -14,10 +14,11 @@
     "uncss",
     "unused"
   ],
-  "homepage": "https://codsen.com/os/email-comb/",
+  "homepage": "https://codsen.com/os/email-comb",
   "repository": {
     "type": "git",
-    "url": "https://github.com/codsen/email-comb-noesm.git"
+    "url": "https://github.com/codsen/codsen.git",
+    "directory": "packages/email-comb"
   },
   "license": "MIT",
   "author": {
