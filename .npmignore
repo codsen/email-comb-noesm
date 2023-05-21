@@ -1,29 +1,49 @@
-# generated using codsen.com/os/lect 
-#
-#
-#       __         ______     ______     ______  
-#      /\ \       /\  ___\   /\  ___\   /\__  _\ 
-#      \ \ \____  \ \  __\   \ \ \____  \/_/\ \/ 
-#       \ \_____\  \ \_____\  \ \_____\    \ \_\ 
-#        \/_____/   \/_____/   \/_____/     \/_/ 
-#  
-#
-
 # folders:
-
+.turbo
+.idea
 .nyc_output
 coverage
-perf
-src
-test
+docs
 examples
+fixtures
+media
+perf
+reference
+src
+tap
+temp
+test
+test_alt
+test-folder
+test-util
+t-util
 
 # files:
 
+.all-contributorsrc
+.babelrc
+.editorconfig
+.eslintrc
+.eslintrc.json
+.gitattributes
+.gitignore
 .npmignore
 .prettierignore
+.travis.yml
+benchmark.js
+cli_bak.js
+contributing.md
+feature1.gif
+fixture_hashes.json
+ideas.md
+package.json.lerna_backup
 rollup.config.js
+test.js
+test.zip
+testStats.json
 testStats.md
-tsconfig.json
+test_bak.js
+travis.js
 tsconfig.build.json
-.eslintrc.json
+tsconfig.json
+yarn-error.log

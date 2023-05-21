@@ -1,50 +1,61 @@
-interface Obj {
-    [key: string]: any;
+interface HtmlCrushOpts {
+  lineLengthLimit: number;
+  removeIndentations: boolean;
+  removeLineBreaks: boolean;
+  removeHTMLComments: boolean | 0 | 1 | 2;
+  removeCSSComments: boolean;
+  reportProgressFunc: null | ((percDone: number) => void);
+  reportProgressFuncFrom: number;
+  reportProgressFuncTo: number;
+  breakToTheLeftOf: string[];
+  mindTheInlineTags: string[];
 }
 
 declare const version: string;
 interface HeadsAndTailsObj {
-    heads: string;
-    tails: string;
+  heads: string;
+  tails: string;
 }
 interface Opts {
-    whitelist: string[];
-    backend: HeadsAndTailsObj[];
-    uglify: boolean;
-    removeHTMLComments: boolean;
-    removeCSSComments: boolean;
-    doNotRemoveHTMLCommentsWhoseOpeningTagContains: string[];
-    reportProgressFunc: null | ((percDone: number) => void);
-    reportProgressFuncFrom: number;
-    reportProgressFuncTo: number;
+  whitelist: string[];
+  backend: HeadsAndTailsObj[];
+  uglify: boolean;
+  removeHTMLComments: boolean;
+  removeCSSComments: boolean;
+  doNotRemoveHTMLCommentsWhoseOpeningTagContains: string[];
+  htmlCrushOpts: Partial<HtmlCrushOpts>;
+  reportProgressFunc: null | ((percDone: number) => void);
+  reportProgressFuncFrom: number;
+  reportProgressFuncTo: number;
 }
+type StringifiedLegend = [string, string];
 interface Res {
-    log: {
-        timeTakenInMilliseconds: number;
-        traversedTotalCharacters: number;
-        traversedTimesInputLength: number;
-        originalLength: number;
-        cleanedLength: number;
-        bytesSaved: number;
-        percentageReducedOfOriginal: number;
-        nonIndentationsWhitespaceLength: number;
-        nonIndentationsTakeUpPercentageOfOriginal: number;
-        commentsLength: number;
-        commentsTakeUpPercentageOfOriginal: number;
-        uglified: null | Obj;
-    };
-    result: string;
-    countAfterCleaning: number;
-    countBeforeCleaning: number;
-    allInHead: string[];
-    allInBody: string[];
-    deletedFromHead: string[];
-    deletedFromBody: string[];
+  log: {
+    timeTakenInMilliseconds: number;
+    traversedTotalCharacters: number;
+    traversedTimesInputLength: number;
+    originalLength: number;
+    cleanedLength: number;
+    bytesSaved: number;
+    percentageReducedOfOriginal: number;
+    nonIndentationsWhitespaceLength: number;
+    nonIndentationsTakeUpPercentageOfOriginal: number;
+    commentsLength: number;
+    commentsTakeUpPercentageOfOriginal: number;
+    uglified: null | StringifiedLegend[];
+  };
+  result: string;
+  countAfterCleaning: number;
+  countBeforeCleaning: number;
+  allInHead: string[];
+  allInBody: string[];
+  deletedFromHead: string[];
+  deletedFromBody: string[];
 }
 declare const defaults: Opts;
 /**
  * Remove unused CSS from email templates
  */
-declare function comb(str: string, originalOpts?: Partial<Opts>): Res;
+declare function comb(str: string, opts?: Partial<Opts>): Res;
 
-export { comb, defaults, version };
+export { HeadsAndTailsObj, Opts, Res, comb, defaults, version };
